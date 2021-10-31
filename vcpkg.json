@@ -1,0 +1,7 @@
+{
+    "name": "cpp-project-template",
+    "version": "0.0.0",
+    "description": "A C++ project template using using cmake, git, and vcpkg",
+    "homepage": "https://github.com/daehlith/cpp-project-template",
+    "dependencies": []
+}
