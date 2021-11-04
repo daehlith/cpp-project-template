@@ -1,0 +1,24 @@
+Checks: 'readability-*,cppcoreguidelines-*,concurrency-*,portability-*,performance-*'
+FormatStyle: file
+HeaderFilterRegex: ''
+InheritParentConfig: false
+WarningsAsErrors: ''
+CheckOptions:
+    -   key: readability-identifier-naming.ClassCase
+        value: CamelCase
+    -   key: readability-identifier-naming.AbstractClassCase
+        value: CamelCase
+    -   key: readability-identifier-naming.ClassMemberCase
+        value: camelBack
+    -   key: readability-identifier-naming.ClassMethodCase
+        value: camelBack
+    -   key: readability-identifier-naming.FunctionCase
+        value: camelBack
+    -   key: readability-identifier-naming.MemberCase
+        value: camelBack
+    -   key: readability-identifier-naming.MethodCase
+        value: camelBack
+    -   key: readability-identifier-naming.ParameterCase
+        value: camelBack
+    -   key: readability-identifier-naming.VariableCase
+        value: camelBack
