@@ -1,0 +1,67 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 2,
+    "patch": 1
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "displayName": "Base Configuration",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/cmake-build-${presetName}/",
+      "hidden": true
+    },
+    {
+      "name": "debug",
+      "displayName": "Debug",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "relwithdebinfo",
+      "displayName": "Release with Debug Information",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Release",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "build",
+      "verbose": true,
+      "hidden": true
+    },
+    {
+      "name": "rebuild",
+      "cleanFirst": true,
+      "verbose": true,
+      "hidden": true
+    },
+    {
+      "name": "build-relwithdebinfo",
+      "displayName": "Build Release with Debug Information",
+      "configurePreset": "relwithdebinfo",
+      "inherits": "build"
+    },
+    {
+      "name": "rebuild-relwithdebinfo",
+      "displayName": "Rebuild Release with Debug Information",
+      "configurePreset": "relwithdebinfo",
+      "inherits": "build"
+    }
+  ],
+  "testPresets": []
+}
