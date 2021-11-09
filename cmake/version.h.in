@@ -6,12 +6,16 @@
 [[maybe_unused]] static const char PROJECT_NAME[] = "${PROJECT_NAME}";
 [[maybe_unused]] static const char PROJECT_DESCRIPTION[] = "${PROJECT_DESCRIPTION}";
 [[maybe_unused]] static const char PROJECT_HOMEPAGE[] = "${PROJECT_HOMEPAGE}";
-[[maybe_unused]] static const char PROJECT_VERSION_STR[] = "${PROJECT_VERSION} / ${GIT_BRANCH} (${GIT_COMMIT_HASH})";
+[[maybe_unused]] static const char PROJECT_VERSION_STR[] = "${PROJECT_VERSION_STR}";
 [[maybe_unused]] static const unsigned int PROJECT_VERSION_MAJOR = ${PROJECT_VERSION_MAJOR};
 [[maybe_unused]] static const unsigned int PROJECT_VERSION_MINOR = ${PROJECT_VERSION_MINOR};
 [[maybe_unused]] static const unsigned int PROJECT_VERSION_PATCH = ${PROJECT_VERSION_PATCH};
 
 [[maybe_unused]] static const char GIT_BRANCH[] = "${GIT_BRANCH}";
 [[maybe_unused]] static const char GIT_COMMIT_HASH[] = "${GIT_COMMIT_HASH}";
+// GIT_DIRTY will be true under two conditions:
+// - there are uncommitted changes to tracked files
+// - there are untracked files in the repository that are not covered by .gitignore rules
+[[maybe_unused]] static const bool GIT_DIRTY = ${GIT_DIRTY};
 
 #endif
