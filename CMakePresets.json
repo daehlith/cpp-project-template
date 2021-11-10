@@ -60,7 +60,31 @@
       "name": "rebuild-relwithdebinfo",
       "displayName": "Rebuild Release with Debug Information",
       "configurePreset": "relwithdebinfo",
+      "inherits": "rebuild"
+    },
+    {
+      "name": "build-release",
+      "displayName": "Build Release",
+      "configurePreset": "release",
       "inherits": "build"
+    },
+    {
+      "name": "rebuild-release",
+      "displayName": "Rebuild Release",
+      "configurePreset": "release",
+      "inherits": "rebuild"
+    },
+    {
+      "name": "build-debug",
+      "displayName": "Build Debug",
+      "configurePreset": "debug",
+      "inherits": "build"
+    },
+    {
+      "name": "rebuild-debug",
+      "displayName": "Rebuild Debug",
+      "configurePreset": "debug",
+      "inherits": "rebuild"
     }
   ],
   "testPresets": []
