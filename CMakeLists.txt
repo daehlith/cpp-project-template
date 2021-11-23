@@ -8,6 +8,7 @@ include(CMakePrintHelpers)
 
 # Source information from vcpkg.json
 include(VcpkgHelpers)
+setup_vcpkg_before_project()
 load_vcpkg_json_information()
 
 project(${VCPKG_PROJECT_NAME}

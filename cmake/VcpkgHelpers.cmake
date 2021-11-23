@@ -11,14 +11,18 @@ from the `vcpkg.json` manifest file to CMake:
     `VCPKG_PROJECT_DEPENDENCIES` - a list of the names of all `dependencies`
 ]]
 
-if(DEFINED ENV{VCPKG_TARGET_TRIPLET} AND NOT DEFINED VCPKG_TARGET_TRIPLET)
-    set(VCPKG_TARGET_TRIPLET "$ENV{VCPKG_TARGET_TRIPLET}" CACHE STRING "")
-endif()
+function(setup_vcpkg_before_project)
+    # support changing the triplet
+    if(DEFINED ENV{VCPKG_DEFAULT_TRIPLET} AND NOT DEFINED VCPKG_TARGET_TRIPLET)
+        set(VCPKG_TARGET_TRIPLET "$ENV{VCPKG_DEFAULT_TRIPLET}" CACHE STRING "")
+    endif()
 
-if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-    set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-        CACHE STRING "")
-endif()
+    # support environment variable instead of toolchain file parameter
+    if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+        set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+            CACHE STRING "")
+    endif()
+endfunction()
 
 function(load_vcpkg_json_information)
     file(READ "${CMAKE_SOURCE_DIR}/vcpkg.json" _RAW_VCPKG)
