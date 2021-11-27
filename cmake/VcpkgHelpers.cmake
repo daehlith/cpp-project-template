@@ -25,6 +25,9 @@ function(setup_vcpkg_before_project)
 endfunction()
 
 function(load_vcpkg_json_information)
+    if(NOT EXISTS ${CMAKE_SOURCE_DIR}/vcpkg.json)
+        message(FATAL_ERROR "Could not find a vcpkg.json manifest file in ${CMAKE_SOURCE_DIR}")
+    endif()
     file(READ "${CMAKE_SOURCE_DIR}/vcpkg.json" _RAW_VCPKG)
     set(PROJECT_VCPKG_JSON ${_RAW_VCPKG})
 
