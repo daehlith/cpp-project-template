@@ -1,7 +1,7 @@
 #[[
 Provides the following utility functions for Qt 6 projects:
 
-`target_run_qt_deploy_tool_post_build(target)` - runs either `windeployqt` or `macdeployqt` as a post-build step for
+`target_run_qt_deploy_tool_post_build(<target>)` - runs either `windeployqt` or `macdeployqt` as a post-build step for
 the provided target.
 ]]
 function(target_run_qt_deploy_tool_post_build target)

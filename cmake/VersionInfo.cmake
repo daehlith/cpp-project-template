@@ -1,5 +1,5 @@
 #[[
-Exposes a `target_add_version_info(target)` function that can be used to generate a `<version.h>` header file for the
+Provides a `target_add_version_info(<target>)` function that can be used to generate a `<version.h>` header file for the
 given target. The generated `<version.h>` header contains useful build environment and project information, f.e. the
 CMake `project()` details and - if applicable - the Git repository status at the time of building.
 

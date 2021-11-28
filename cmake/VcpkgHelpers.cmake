@@ -1,5 +1,6 @@
 #[[
-Ensures that the vcpkg toolchain file is used.
+Provides a `setup_vcpkg_before_project()` function that integrates vcpkg triplet and toolchain configuration, as per
+[official documentation](https://vcpkg.io/en/docs/users/integration.html#cmake-integration).
 
 Additionally, a `load_vcpkg_json_information()` function is provided. This function exposes the following information
 from the `vcpkg.json` manifest file to CMake:
