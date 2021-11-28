@@ -22,7 +22,7 @@ function(target_run_qt_deploy_tool_post_build target)
     add_custom_command(
         TARGET ${target}
         POST_BUILD
-        COMMAND "${_WINDEPLOYQT_COMMAND}" "$<TARGET_FILE:${target}>"
+        COMMAND "${_tool_path}" "$<TARGET_FILE:${target}>"
         VERBATIM
         WORKING_DIRECTORY ${target_binary_dir})
 endfunction()
