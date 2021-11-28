@@ -69,6 +69,8 @@ function(target_add_version_info target)
     get_target_property(TARGET_BINARY_DIR ${target} BINARY_DIR)
     set(GENERATED_HEADER_PATH ${TARGET_BINARY_DIR}/.generated/VersionInfo)
 
+    string(TIMESTAMP PROJECT_BUILD_DATETIME UTC)
+
     configure_file(
         cmake/version.h.in
         ${GENERATED_HEADER_PATH}/version.h

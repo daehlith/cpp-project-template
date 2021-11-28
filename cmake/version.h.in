@@ -13,9 +13,13 @@
 
 [[maybe_unused]] static const char GIT_BRANCH[] = "${GIT_BRANCH}";
 [[maybe_unused]] static const char GIT_COMMIT_HASH[] = "${GIT_COMMIT_HASH}";
+
 // GIT_DIRTY will be true under two conditions:
 // - there are uncommitted changes to tracked files
 // - there are untracked files in the repository that are not covered by .gitignore rules
 [[maybe_unused]] static const bool GIT_DIRTY = ${GIT_DIRTY};
+
+// Date and time of the build, in UTC timezone, as ISO 8601 formatted string.
+[[maybe_unused]] static const char PROJECT_BUILD_DATETIME[] = "${PROJECT_BUILD_DATETIME}";
 
 #endif
