@@ -72,7 +72,7 @@ function(target_add_version_info target)
     string(TIMESTAMP PROJECT_BUILD_DATETIME UTC)
 
     configure_file(
-        cmake/version.h.in
+        ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/version.h.in
         ${GENERATED_HEADER_PATH}/version.h
         NEWLINE_STYLE UNIX)
 
