@@ -34,4 +34,5 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 endif()
 
 
-# ... add targets here ...
+# An example application target to illustrate how the project could be structured
+add_subdirectory(src/foo)
