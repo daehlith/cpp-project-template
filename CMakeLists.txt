@@ -21,6 +21,17 @@ set(CMAKE_CXX_STANDARD 17 CACHE STRING "The C++ standard to use")
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Force library symbol visibility to be the same as when compiling MSVC, unless explicitly overridden.
+# NB: MSVC hides library symbols by default and requires explicit export annotations in code.
+if(NOT MSVC)
+    if(NOT DEFINED CMAKE_CXX_VISIBILITY_PRESET)
+        set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+    endif()
+    if(NOT DEFINED CMAKE_VISIBILITY_INLINES_HIDDEN)
+        set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
+    endif()
+endif()
+
 # Useful to have the print helpers around for debugging purposes
 include(CMakePrintHelpers)
 
@@ -36,3 +47,6 @@ endif()
 
 # An example application target to illustrate how the project could be structured
 add_subdirectory(src/foo)
+
+# An example library target to illustrate how the project could be structured
+add_subdirectory(src/bar)
