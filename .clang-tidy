@@ -12,6 +12,8 @@ CheckOptions:
         value: camelBack
     -   key: readability-identifier-naming.ClassMethodCase
         value: camelBack
+    -   key: readability-identifier-naming.ConstantCase
+        value: UPPER_CASE
     -   key: readability-identifier-naming.FunctionCase
         value: camelBack
     -   key: readability-identifier-naming.MemberCase
