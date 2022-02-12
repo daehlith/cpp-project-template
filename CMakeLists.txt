@@ -42,6 +42,8 @@ include(VersionInfo)
 # includes us. See https://cliutils.gitlab.io/modern-cmake/chapters/testing.html
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     include(CTest)
+    find_package(GTest CONFIG REQUIRED)
+    include(GoogleTest)
 endif()
 
 # Optional support for building API documentation using doxygen

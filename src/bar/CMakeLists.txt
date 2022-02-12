@@ -12,3 +12,10 @@ target_include_directories(bar PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/.generated>)
 generate_export_header(bar EXPORT_FILE_NAME "${GENERATED_HEADER_PATH}")
+
+# Build tests if necessary
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+    add_executable(test_bar tests/test_bar.cpp)
+    target_link_libraries(test_bar PRIVATE bar GTest::gtest GTest::gtest_main)
+    gtest_add_tests(TARGET test_bar)
+endif()
