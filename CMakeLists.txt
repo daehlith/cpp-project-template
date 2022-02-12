@@ -44,6 +44,19 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     include(CTest)
 endif()
 
+# Optional support for building API documentation using doxygen
+option(BUILD_DOCUMENTATION "Build documentation" ON)
+if(BUILD_DOCUMENTATION)
+    # Provide a `docs` target, but also include it in the `ALL` target
+    # See https://cmake.org/cmake/help/latest/module/FindDoxygen.html for details
+    find_package(Doxygen REQUIRED)
+    doxygen_add_docs(docs
+        ALL
+        COMMENT "Building documentation for ${CMAKE_PROJECT_NAME}"
+        cmake/
+        include/
+        src/)
+endif()
 
 # An example application target to illustrate how the project could be structured
 add_subdirectory(src/foo)
