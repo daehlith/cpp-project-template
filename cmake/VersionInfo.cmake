@@ -38,7 +38,8 @@ function(target_add_version_info target)
         )
         execute_process(
             COMMAND ${GIT_EXECUTABLE} ls-files --exclude-standard --other --error-unmatch
-            WORKING_DIRECTORY ${TARGET_SOURCE_DIR}
+            # git ls-files only works correctly when run against the git repository root
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
             ERROR_QUIET
             OUTPUT_QUIET
             RESULT_VARIABLE GIT_UNTRACKED_UNIGNORED_FILES
