@@ -41,7 +41,7 @@ jobs:
             -   name: Install doxygen
                 run: |
                     sudo apt-get update
-                    sudo apt-get install doxygen
+                    sudo apt-get install doxygen ninja-build
             -   name: Checkout
                 uses: actions/checkout@v2
             -   name: "Setup NuGet Credentials"
