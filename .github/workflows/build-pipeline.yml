@@ -32,7 +32,6 @@ jobs:
                     -   os: "ubuntu-latest"
                         triplet: "x64-linux"
                         mono: "mono"
-                        vcpkg_bootstrap: bootstrap-vcpkg.sh
         runs-on: ${{ matrix.os }}
         defaults:
             run:
@@ -40,26 +39,20 @@ jobs:
         steps:
             -   name: Checkout
                 uses: actions/checkout@v2
-                with:
-                    path: ${{ github.repository }}
-            -   name: Checkout vcpkg
-                uses: actions/checkout@v2
-                with:
-                    repository: "microsoft/vcpkg"
-                    ref: "2022.02.02"
-                    path: vcpkg
-            -   name: Setup vcpkg
-                run: ./vcpkg/${{ matrix.vcpkg_bootstrap }}
             -   name: "Setup NuGet Credentials"
                 run: >
-                    ${{ matrix.mono }} `./vcpkg/vcpkg fetch nuget | tail -n 1`
+                    ${{ matrix.mono }} `$VCPKG_INSTALLATION_ROOT/vcpkg fetch nuget | tail -n 1`
                     sources add
                     -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
                     -storepasswordincleartext
                     -name "GitHub"
                     -username "${{ github.repository_owner }}"
                     -password "${{ secrets.GITHUB_TOKEN }}"
+            -   name: Debug information
+                run: >
+                    ls -al
+                    env
             -   name: Configure
-                run: cmake -S ${{ github.repository }} -B .build -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
+                run: cmake -S ${{ github.repository }} -B .build -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
             -   name: Build
                 run: cmake --build .build
