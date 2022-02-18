@@ -23,6 +23,7 @@ jobs:
     build:
         env:
             CMAKE_BUILD_TYPE: RelWithDebInfo
+            CMAKE_GENERATOR: Ninja
             VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
             VCPKG_DISABLE_METRICS: ON
         strategy:
@@ -37,6 +38,10 @@ jobs:
             run:
                 shell: bash
         steps:
+            -   name: Install doxygen
+                run: |
+                    sudo apt-get update
+                    sudo apt-get install doxygen
             -   name: Checkout
                 uses: actions/checkout@v2
             -   name: "Setup NuGet Credentials"
