@@ -51,8 +51,8 @@ jobs:
             -   name: Debug information
                 run: |
                     ls -al
-                    env
+                    env | sort
             -   name: Configure
-                run: cmake -S ${{ github.repository }} -B .build -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
+                run: cmake -B .build -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
             -   name: Build
                 run: cmake --build .build
