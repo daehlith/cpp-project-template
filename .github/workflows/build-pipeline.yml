@@ -24,6 +24,7 @@ jobs:
         env:
             CMAKE_BUILD_TYPE: RelWithDebInfo
             VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
+            VCPKG_DISABLE_METRICS: ON
         strategy:
             matrix:
                 os: [ ubuntu-latest ]
