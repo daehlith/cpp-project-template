@@ -31,19 +31,22 @@ jobs:
                 os: [ macos-latest, ubuntu-latest, windows-latest ]
                 include:
                     -   os: "macos-latest"
+                        configure_shell: "bash"
                         triplet: "x64-osx"
                         mono: "mono"
                         vcpkg_var: "$VCPKG_INSTALLATION_ROOT"
                         install_prereqs_cmd: "brew update && brew install doxygen ninja"
                     -   os: "ubuntu-latest"
                         triplet: "x64-linux"
+                        configure_shell: "bash"
                         mono: "mono"
                         vcpkg_var: "$VCPKG_INSTALLATION_ROOT"
                         install_prereqs_cmd: "sudo apt-get update && sudo apt-get install doxygen ninja-build"
                     -   os: "windows-latest"
+                        configure_shell: "cmd"
                         triplet: "x64-windows"
                         mono: ""
-                        vcpkg_var: "$env:VCPKG_INSTALLATION_ROOT"
+                        vcpkg_var: "%VCPKG_INSTALLATION_ROOT%"
                         install_prereqs_cmd: "choco install doxygen.install ninja"
         runs-on: ${{ matrix.os }}
         steps:
@@ -52,8 +55,9 @@ jobs:
             -   name: Checkout
                 uses: actions/checkout@v2
             -   name: "Setup NuGet Credentials"
+                shell: bash
                 run: >
-                    ${{ matrix.mono }} `${{ matrix.vcpkg_var }}/vcpkg fetch nuget | tail -n 1`
+                    ${{ matrix.mono }} `$VCPKG_INSTALLATION_ROOT/vcpkg fetch nuget | tail -n 1`
                     sources add
                     -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
                     -storepasswordincleartext
@@ -64,9 +68,10 @@ jobs:
                 if: runner.os == 'Windows'
                 uses: ilammy/msvc-dev-cmd@v1
             -   name: Configure
+                shell: ${{ matrix.configure_shell }}
                 run: cmake -B .build -DCMAKE_TOOLCHAIN_FILE=${{ matrix.vcpkg_var }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
             -   name: Build
-                run: cmake --build .build
+                run: cmake --build .build --parallel
             -   name: Test
                 run: ctest
                 working-directory: .build
