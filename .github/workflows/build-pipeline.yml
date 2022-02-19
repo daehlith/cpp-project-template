@@ -3,7 +3,6 @@ on:
     push:
         branches:
             - development
-            - add-github-actions-support
         paths-ignore:
             - ".clang-format"
             - ".clang-tidy"
@@ -30,24 +29,18 @@ jobs:
             matrix:
                 os: [ macos-latest, ubuntu-latest, windows-latest ]
                 include:
-                    -   os: "macos-latest"
-                        configure_shell: "bash"
+                    -   install_prereqs_cmd: "brew update && brew install doxygen ninja"
+                        mono: "mono"
+                        os: "macos-latest"
                         triplet: "x64-osx"
+                    -   install_prereqs_cmd: "sudo apt-get update && sudo apt-get install doxygen ninja-build"
                         mono: "mono"
-                        vcpkg_var: "$VCPKG_INSTALLATION_ROOT"
-                        install_prereqs_cmd: "brew update && brew install doxygen ninja"
-                    -   os: "ubuntu-latest"
+                        os: "ubuntu-latest"
                         triplet: "x64-linux"
-                        configure_shell: "bash"
-                        mono: "mono"
-                        vcpkg_var: "$VCPKG_INSTALLATION_ROOT"
-                        install_prereqs_cmd: "sudo apt-get update && sudo apt-get install doxygen ninja-build"
-                    -   os: "windows-latest"
-                        configure_shell: "cmd"
-                        triplet: "x64-windows"
+                    -   install_prereqs_cmd: "choco install doxygen.install ninja"
                         mono: ""
-                        vcpkg_var: "$VCPKG_INSTALLATION_ROOT"
-                        install_prereqs_cmd: "choco install doxygen.install ninja"
+                        os: "windows-latest"
+                        triplet: "x64-windows"
         runs-on: ${{ matrix.os }}
         defaults:
             run:
@@ -70,7 +63,7 @@ jobs:
                 if: runner.os == 'Windows'
                 uses: ilammy/msvc-dev-cmd@v1
             -   name: Configure
-                run: cmake -B .build -DCMAKE_TOOLCHAIN_FILE=${{ matrix.vcpkg_var }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
+                run: cmake -B .build -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
             -   name: Build
                 run: cmake --build .build --parallel
             -   name: Test
