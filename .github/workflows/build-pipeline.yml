@@ -33,36 +33,27 @@ jobs:
                     -   os: "macos-latest"
                         triplet: "x64-osx"
                         mono: "mono"
-                        prefix: ""
+                        vcpkg_var: "$VCPKG_INSTALLATION_ROOT"
+                        install_prereqs_cmd: "brew update && brew install doxygen ninja"
                     -   os: "ubuntu-latest"
                         triplet: "x64-linux"
                         mono: "mono"
-                        prefix: ""
+                        vcpkg_var: "$VCPKG_INSTALLATION_ROOT"
+                        install_prereqs_cmd: "sudo apt-get update && sudo apt-get install doxygen ninja-build"
                     -   os: "windows-latest"
                         triplet: "x64-windows"
                         mono: ""
-                        prefix: "env:"
+                        vcpkg_var: "$env:VCPKG_INSTALLATION_ROOT"
+                        install_prereqs_cmd: "choco install doxygen.install ninja"
         runs-on: ${{ matrix.os }}
         steps:
             -   name: Install prerequisites
-                if: runner.os == 'Linux'
-                run: |
-                    sudo apt-get update
-                    sudo apt-get install doxygen ninja-build
-            -   name: Install prerequisites
-                if: runner.os == 'Windows'
-                run: |
-                    choco install doxygen.install ninja
-            -   name: Install prerequisites
-                if: runner.os == 'macOS'
-                run: |
-                    brew update
-                    brew install doxygen ninja
+                run: ${{ matrix.install_prereqs_cmd }}
             -   name: Checkout
                 uses: actions/checkout@v2
             -   name: "Setup NuGet Credentials"
                 run: >
-                    ${{ matrix.mono }} `$${{ matrix.prefix }}VCPKG_INSTALLATION_ROOT/vcpkg fetch nuget | tail -n 1`
+                    ${{ matrix.mono }} `${{ matrix.vcpkg_var }}/vcpkg fetch nuget | tail -n 1`
                     sources add
                     -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
                     -storepasswordincleartext
@@ -73,7 +64,7 @@ jobs:
                 if: runner.os == 'Windows'
                 uses: ilammy/msvc-dev-cmd@v1
             -   name: Configure
-                run: cmake -B .build -DCMAKE_TOOLCHAIN_FILE=$${{ matrix.prefix }}VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
+                run: cmake -B .build -DCMAKE_TOOLCHAIN_FILE=${{ matrix.vcpkg_var }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
             -   name: Build
                 run: cmake --build .build
             -   name: Test
