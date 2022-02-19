@@ -28,20 +28,36 @@ jobs:
             VCPKG_DISABLE_METRICS: ON
         strategy:
             matrix:
-                os: [ ubuntu-latest ]
+                os: [ macos-latest, ubuntu-latest, windows-latest ]
                 include:
+                    -   os: "macos-latest"
+                        triplet: "x64-osx"
+                        mono: "mono"
                     -   os: "ubuntu-latest"
                         triplet: "x64-linux"
                         mono: "mono"
+                    -   os: "windows-latest"
+                        triplet: "x64-windows"
+                        mono: ""
         runs-on: ${{ matrix.os }}
         defaults:
             run:
                 shell: bash
         steps:
-            -   name: Install doxygen
+            -   name: Install prerequisites
+                if: runner.os == 'Linux'
                 run: |
                     sudo apt-get update
                     sudo apt-get install doxygen ninja-build
+            -   name: Install prerequisites
+                if: runner.os == 'Windows'
+                run: |
+                    choco install doxygen.install ninja
+            -   name: Install prerequisites
+                if: runner.os == 'macOS'
+                run: |
+                    brew update
+                    brew install doxygen ninja
             -   name: Checkout
                 uses: actions/checkout@v2
             -   name: "Setup NuGet Credentials"
