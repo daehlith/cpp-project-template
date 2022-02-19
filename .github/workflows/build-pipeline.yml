@@ -40,9 +40,6 @@ jobs:
                         triplet: "x64-windows"
                         mono: ""
         runs-on: ${{ matrix.os }}
-        defaults:
-            run:
-                shell: bash
         steps:
             -   name: Install prerequisites
                 if: runner.os == 'Linux'
@@ -69,6 +66,9 @@ jobs:
                     -name "GitHub"
                     -username "${{ github.repository_owner }}"
                     -password "${{ secrets.GITHUB_TOKEN }}"
+            -   name: Setup MSVC environment
+                if: runner.os == 'Windows'
+                uses: ilammy/msvc-dev-cmd@v1
             -   name: Configure
                 run: cmake -B .build -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
             -   name: Build
