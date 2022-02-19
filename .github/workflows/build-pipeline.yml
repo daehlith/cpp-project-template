@@ -61,3 +61,6 @@ jobs:
                 run: cmake -B .build -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
             -   name: Build
                 run: cmake --build .build
+            -   name: Test
+                run: ctest
+                working-directory: .build
