@@ -46,16 +46,18 @@ jobs:
                         configure_shell: "cmd"
                         triplet: "x64-windows"
                         mono: ""
-                        vcpkg_var: "%VCPKG_INSTALLATION_ROOT%"
+                        vcpkg_var: "$VCPKG_INSTALLATION_ROOT"
                         install_prereqs_cmd: "choco install doxygen.install ninja"
         runs-on: ${{ matrix.os }}
+        defaults:
+            run:
+                shell: bash
         steps:
             -   name: Install prerequisites
                 run: ${{ matrix.install_prereqs_cmd }}
             -   name: Checkout
                 uses: actions/checkout@v2
             -   name: "Setup NuGet Credentials"
-                shell: bash
                 run: >
                     ${{ matrix.mono }} `$VCPKG_INSTALLATION_ROOT/vcpkg fetch nuget | tail -n 1`
                     sources add
@@ -68,7 +70,6 @@ jobs:
                 if: runner.os == 'Windows'
                 uses: ilammy/msvc-dev-cmd@v1
             -   name: Configure
-                shell: ${{ matrix.configure_shell }}
                 run: cmake -B .build -DCMAKE_TOOLCHAIN_FILE=${{ matrix.vcpkg_var }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
             -   name: Build
                 run: cmake --build .build --parallel
