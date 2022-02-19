@@ -53,10 +53,6 @@ jobs:
                     -name "GitHub"
                     -username "${{ github.repository_owner }}"
                     -password "${{ secrets.GITHUB_TOKEN }}"
-            -   name: Debug information
-                run: |
-                    ls -al
-                    env | sort
             -   name: Configure
                 run: cmake -B .build -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
             -   name: Build
