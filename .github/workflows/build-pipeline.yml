@@ -1,0 +1,71 @@
+name: Build Pipeline
+on:
+    push:
+        branches:
+            - development
+        paths-ignore:
+            - ".clang-format"
+            - ".clang-tidy"
+            - ".editorconfig"
+            - ".gitignore"
+            - "README.md"
+    pull_request:
+        branches:
+            - development
+        paths-ignore:
+            - ".clang-format"
+            - ".clang-tidy"
+            - ".editorconfig"
+            - ".gitignore"
+            - "README.md"
+jobs:
+    build:
+        env:
+            CMAKE_BUILD_TYPE: RelWithDebInfo
+            CMAKE_GENERATOR: Ninja
+            VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
+            VCPKG_DISABLE_METRICS: ON
+        strategy:
+            matrix:
+                os: [ macos-latest, ubuntu-latest, windows-latest ]
+                include:
+                    -   install_prereqs_cmd: "brew update && brew install doxygen ninja"
+                        mono: "mono"
+                        os: "macos-latest"
+                        triplet: "x64-osx"
+                    -   install_prereqs_cmd: "sudo apt-get update && sudo apt-get install doxygen ninja-build"
+                        mono: "mono"
+                        os: "ubuntu-latest"
+                        triplet: "x64-linux"
+                    -   install_prereqs_cmd: "choco install doxygen.install ninja"
+                        mono: ""
+                        os: "windows-latest"
+                        triplet: "x64-windows"
+        runs-on: ${{ matrix.os }}
+        defaults:
+            run:
+                shell: bash
+        steps:
+            -   name: Install prerequisites
+                run: ${{ matrix.install_prereqs_cmd }}
+            -   name: Checkout
+                uses: actions/checkout@v2
+            -   name: "Setup NuGet Credentials"
+                run: >
+                    ${{ matrix.mono }} `$VCPKG_INSTALLATION_ROOT/vcpkg fetch nuget | tail -n 1`
+                    sources add
+                    -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+                    -storepasswordincleartext
+                    -name "GitHub"
+                    -username "${{ github.repository_owner }}"
+                    -password "${{ secrets.GITHUB_TOKEN }}"
+            -   name: Setup MSVC environment
+                if: runner.os == 'Windows'
+                uses: ilammy/msvc-dev-cmd@v1
+            -   name: Configure
+                run: cmake -B .build -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
+            -   name: Build
+                run: cmake --build .build --parallel
+            -   name: Test
+                run: ctest
+                working-directory: .build

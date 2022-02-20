@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <vector>
 
 #include <bar/bar_export.h> // Provides symbol visibility helper macros
