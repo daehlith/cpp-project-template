@@ -21,8 +21,6 @@ on:
 jobs:
     build:
         env:
-            CMAKE_BUILD_TYPE: RelWithDebInfo
-            CMAKE_GENERATOR: Ninja
             VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
             VCPKG_DISABLE_METRICS: ON
         strategy:
@@ -63,9 +61,10 @@ jobs:
                 if: runner.os == 'Windows'
                 uses: ilammy/msvc-dev-cmd@v1
             -   name: Configure
-                run: cmake -B .build -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
+                env:
+                    VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
+                run: cmake --preset "ninja-multi-config" -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake
             -   name: Build
-                run: cmake --build .build --parallel
+                run: cmake --preset "ninja-multi-config-release"
             -   name: Test
-                run: ctest
-                working-directory: .build
+                run: ctest --preset "ninja-multi-config-release"
