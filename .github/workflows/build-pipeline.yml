@@ -65,6 +65,6 @@ jobs:
                     VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
                 run: cmake --preset "ninja-multi-config" -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake
             -   name: Build
-                run: cmake --preset "ninja-multi-config-release"
+                run: cmake --build --preset "ninja-multi-config-release"
             -   name: Test
                 run: ctest --preset "ninja-multi-config-release"
