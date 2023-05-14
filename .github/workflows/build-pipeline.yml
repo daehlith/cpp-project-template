@@ -47,7 +47,7 @@ jobs:
             -   name: Install prerequisites
                 run: ${{ matrix.install_prereqs_cmd }}
             -   name: Checkout
-                uses: actions/checkout@v2
+                uses: actions/checkout@v3
             -   name: "Setup NuGet Credentials"
                 run: >
                     ${{ matrix.mono }} `$VCPKG_INSTALLATION_ROOT/vcpkg fetch nuget | tail -n 1`
