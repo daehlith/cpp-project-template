@@ -21,7 +21,7 @@ on:
 jobs:
     build:
         env:
-            VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
+            VCPKG_BINARY_SOURCES: 'clear;x-gha,readwrite'
             VCPKG_DISABLE_METRICS: ON
         strategy:
             matrix:
@@ -48,21 +48,26 @@ jobs:
                 run: ${{ matrix.install_prereqs_cmd }}
             -   name: Checkout
                 uses: actions/checkout@v3
-            -   name: "Setup NuGet Credentials"
-                run: |
-                    ${{ matrix.mono }} `$VCPKG_INSTALLATION_ROOT/vcpkg fetch nuget | tail -n 1` \
-                        sources add \
-                        -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
-                        -storepasswordincleartext \
-                        -name "GitHub" \
-                        -username "${{ github.repository_owner }}" \
-                        -password "${{ secrets.GITHUB_TOKEN }}"
-                    ${{ matrix.mono }} `$VCPKG_INSTALLATION_ROOT/vcpkg fetch nuget | tail -n 1` \
-                        setapikey "${{ secrets.GITHUB_TOKEN }}" \
-                        -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+            -   name: Configure GitHub Actions cache for vcpkg
+                uses: actions/github-script@v6
+                with:
+                    script: |
+                        core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+                        core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
             -   name: Setup MSVC environment
                 if: runner.os == 'Windows'
                 uses: ilammy/msvc-dev-cmd@v1
+            -   name: Restore vcpkg
+                uses: actions/cache@v3
+                with:
+                    path: |
+                        ${{ env.VCPKG_INSTALLATION_ROOT }}
+                        !${{ env.VCPKG_INSTALLATION_ROOT }}/buildtrees
+                        !${{ env.VCPKG_INSTALLATION_ROOT }}/packages
+                        !${{ env.VCPKG_INSTALLATION_ROOT }}/downloads
+                        !${{ env.VCPKG_INSTALLATION_ROOT }}/installed
+                    key: |
+                        ${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}
             -   name: Configure
                 env:
                     VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
