@@ -27,16 +27,13 @@ jobs:
             matrix:
                 os: [ macos-latest, ubuntu-latest, windows-latest ]
                 include:
-                    -   install_prereqs_cmd: "brew update && brew install doxygen ninja"
-                        mono: "mono"
+                    -   mono: "mono"
                         os: "macos-latest"
                         triplet: "x64-osx"
-                    -   install_prereqs_cmd: "sudo apt-get update && sudo apt-get install doxygen ninja-build"
-                        mono: "mono"
+                    -   mono: "mono"
                         os: "ubuntu-latest"
                         triplet: "x64-linux"
-                    -   install_prereqs_cmd: "choco install doxygen.install ninja"
-                        mono: ""
+                    -   mono: ""
                         os: "windows-latest"
                         triplet: "x64-windows"
         runs-on: ${{ matrix.os }}
@@ -44,8 +41,12 @@ jobs:
             run:
                 shell: bash
         steps:
-            -   name: Install prerequisites
-                run: ${{ matrix.install_prereqs_cmd }}
+            -   name: Install doxygen
+                uses: ssciwr/doxygen-install@v1
+                with:
+                    version: "1.9.7"
+            -   name: Install ninja
+                uses: daehlith/ninja-install@v1
             -   name: Checkout
                 uses: actions/checkout@v3
             -   name: "Setup NuGet Credentials"
